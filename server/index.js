@@ -3,13 +3,12 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-app.use(cors({
-    origin: '*', // For development/testing. In production, change this to your Vercel URL later.
-    credentials: true
-}));
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: '*', // Allow all origins for now (or set to your Vercel URL)
+    credentials: true
+}));
 app.use(express.json());
 
 // --- Database Connection ---
@@ -261,7 +260,13 @@ app.get('/api/dashboard', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-const PORT = process.env.PORT || 5000;
+if (process.env.MONGO_URI) {
+    mongoose.connect(process.env.MONGO_URI)
+        .then(() => console.log('MongoDB Connected'))
+        .catch(err => console.error('MongoDB connection error:', err));
+}
+
+const PORT = process.env.PORT || 10000; // Render usually uses 10000
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
