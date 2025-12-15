@@ -4,11 +4,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const app = express();
 app.use(cors({
-    origin: '*', // Allow all origins for now (or set to your Vercel URL)
+    origin: [
+        "http://localhost:5173", // Allow local development
+        "https://your-vercel-app-name.vercel.app" // ADD YOUR VERCEL DOMAIN HERE
+    ],
     credentials: true
 }));
+
 app.use(express.json());
 
 // --- Database Connection ---
