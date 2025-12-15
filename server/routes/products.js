@@ -1,24 +1,36 @@
 const express = require('express');
 const router = express.Router();
-// Import your Product Model if using MongoDB, e.g.: const Product = require('../models/Product');
+const Product = require('../models/Product'); // Import the Model
 
 // GET all products
 router.get('/', async (req, res) => {
-    // Replace with real DB call: const products = await Product.find();
-    // For now, returning empty array or mock data to stop crash
-    res.json({ success: true, data: [] });
+    try {
+        const products = await Product.find().sort({ createdAt: -1 });
+        res.json({ success: true, data: products });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
 // POST add product
 router.post('/', async (req, res) => {
-    // const newProduct = await Product.create(req.body);
-    res.json({ success: true, message: "Product added", data: req.body });
+    try {
+        const newProduct = await Product.create(req.body);
+        res.json({ success: true, data: newProduct });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
 });
 
 // DELETE product
 router.delete('/:id', async (req, res) => {
-    // await Product.findByIdAndDelete(req.params.id);
-    res.json({ success: true, message: "Product deleted" });
+    try {
+        const deleted = await Product.findByIdAndDelete(req.params.id);
+        if (!deleted) return res.status(404).json({ success: false, message: "Not found" });
+        res.json({ success: true, message: "Product deleted" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
 module.exports = router;
