@@ -34,9 +34,9 @@ export const Layout: React.FC = () => {
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col p-6 shadow-sm z-10">
         <div className="mb-10 flex items-center gap-2">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">H</span>
+            <span className="text-white font-bold text-lg">B</span>
           </div>
-          <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-tight">Hisan Book<br/>Fair 2k25</h1>
+          <h1 className="text-xl font-bold text-slate-800 tracking-tight leading-tight">Book Gala<br/>2k25</h1>
         </div>
 
         <nav className="flex-1">

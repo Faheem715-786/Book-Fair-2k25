@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Edit2, Save, X, Search, Filter, Plus, Trash2 } from 'lucide-react';
-import { dbService } from '../services/mockDb'; // Or '../services/api' if you switched to backend
+import { dbService } from '../services/api'; // Or '../services/api' if you switched to backend
 import { Product } from '../types';
 
 export const Products: React.FC = () => {
@@ -43,18 +43,25 @@ export const Products: React.FC = () => {
     loadProducts();
   };
 
-  const handleDeleteProduct = async (id: string, name: string) => {
-    if (window.confirm(`Are you sure you want to delete the product: "${name}"? This action cannot be undone.`)) {
-        try {
-            await dbService.deleteProduct(id);
-            loadProducts();
-        } catch (error) {
-            console.error('Error deleting product:', error);
-            alert('Failed to delete product. Check console for details.');
-        }
-    }
-  };
+  const handleDeleteProduct = async (id: string) => {
+  if (!confirm("Are you sure you want to delete this product?")) return;
 
+  try {
+    // 1. Send delete request to backend
+    await dbService.deleteProduct(id);
+    
+    // 2. IMPORTANT: Remove it from the screen immediately
+    setProducts(prevProducts => prevProducts.filter(p => p._id !== id));
+    
+  } catch (error) {
+    console.error("Failed to delete:", error);
+    alert("Could not delete product. It might already be removed.");
+    
+    // Optional: Reload data just in case
+    // const refreshed = await dbService.getProducts();
+    // setProducts(refreshed);
+  }
+};
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,7 +174,7 @@ export const Products: React.FC = () => {
                                 <Edit2 size={18} />
                             </button>
                             <button 
-                                onClick={() => handleDeleteProduct(product._id, product.name)} 
+                                onClick={() => handleDeleteProduct(product._id)} 
                                 className="text-slate-400 hover:text-red-600 transition-colors"
                                 title="Delete Product"
                             >
