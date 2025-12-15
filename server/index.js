@@ -3,6 +3,10 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+app.use(cors({
+    origin: '*', // For development/testing. In production, change this to your Vercel URL later.
+    credentials: true
+}));
 
 const app = express();
 app.use(cors());
@@ -258,4 +262,6 @@ app.get('/api/dashboard', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
