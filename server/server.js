@@ -1,9 +1,12 @@
-// server/index.js
-require('dotenv').config();
+// server/server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config();
 
+const app = express();
+
+// --- Middleware ---
 app.use(cors({
     origin: [
         "http://localhost:5173", // Allow local development
@@ -263,25 +266,26 @@ app.get('/api/dashboard', async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-const productRoutes = require('./routes/products'); 
+// 4. ROUTES
+const productRoutes = require('./routes/products');
 const customerRoutes = require('./routes/customers');
 const invoiceRoutes = require('./routes/invoices');
-const dashboardRoutes = require('./routes/dashboard'); // If you have this
+const dashboardRoutes = require('./routes/dashboard');
 
-// Tell the app to use them
 app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-// --------------------------------------
 
-// Database Connection
+// 5. DATABASE CONNECTION
 if (process.env.MONGO_URI) {
     mongoose.connect(process.env.MONGO_URI)
         .then(() => console.log('MongoDB Connected'))
         .catch(err => console.error('MongoDB Error:', err));
 }
 
-// Start Server
+// 6. START SERVER
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
